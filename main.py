@@ -1,13 +1,17 @@
 import requests
+import configparser
 
-# Define the API endpoint and API key for the ChatGPT API
-API_URL = "https://api.openai.com/v1/chat/completions"
-API_KEY = "your_openai_api_key"
+# Function to get the API key from the config file
+def get_api_key(config_file='config.ini'):
+    config = configparser.ConfigParser()
+    config.read(config_file)
+    return config['openai']['api_key']
 
-def chatgpt_query(prompt):
+# Function to query the ChatGPT API
+def chatgpt_query(prompt, api_key):
     headers = {
         "Content-Type": "application/json",
-        "Authorization": f"Bearer {API_KEY}"
+        "Authorization": f"Bearer {api_key}"
     }
 
     data = {
@@ -19,9 +23,9 @@ def chatgpt_query(prompt):
     response_json = response.json()
     return response_json["choices"][0]["message"]["content"]
 
-def parse_query(user_query):
+def parse_query(user_query, api_key):
     prompt = f"Break down the following query into actionable steps:\n\n{user_query}"
-    steps = chatgpt_query(prompt)
+    steps = chatgpt_query(prompt, api_key)
     return steps.split('\n')
 
 def assign_tasks(steps):
@@ -33,11 +37,11 @@ def assign_tasks(steps):
         agents[agent_id].append(step)
     return agents
 
-def execute_tasks(agents):
+def execute_tasks(agents, api_key):
     responses = {}
     for agent_id, tasks in agents.items():
         prompt = f"Execute the following tasks:\n\n{'\n'.join(tasks)}"
-        response = chatgpt_query(prompt)
+        response = chatgpt_query(prompt, api_key)
         responses[agent_id] = response
     return responses
 
@@ -48,14 +52,17 @@ def collate_responses(responses):
     return collated_response
 
 def main(user_query):
+    # Get the API key from the config file
+    api_key = get_api_key()
+
     # Step 1: Parse the user query into actionable steps
-    steps = parse_query(user_query)
+    steps = parse_query(user_query, api_key)
 
     # Step 2: Assign tasks to different agents
     agents = assign_tasks(steps)
 
     # Step 3: Execute tasks and get responses
-    responses = execute_tasks(agents)
+    responses = execute_tasks(agents, api_key)
 
     # Step 4: Collate responses into a single output
     final_response = collate_responses(responses)
