@@ -12,7 +12,16 @@ AI Agentic framework - I would proudly call this a "great minds think alike" con
 - Always works in a "function-calling" pattern
 - Invokes Tools or external API as needed / defined
 - Doesn't get too creative (unless needed) and responds to the point
-  
+
+## Key aspects:
+- The Planner node is expected to
+    - hold the context of the entire conversation across mutiple iterations of tasks sets.
+    - Define and establish the system prompts which acts as a north star for workder nodes with each iteration
+      
+- The Worker node(s) are expected to
+    - Maintain short term memory and for communication with other APIs / systems 
+    - Maintain a long term memeory if there needs to be multiple calls to APIs / systems (i.e. North Star for the overall context)
+      
 
 ### Reference:
 Lang-chain's ReACT Style Architecture - https://github.com/langchain-ai/langgraph/blob/main/examples/rewoo/rewoo.ipynb?ref=blog.langchain.dev
