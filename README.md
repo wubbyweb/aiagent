@@ -14,6 +14,8 @@ AI Agentic framework - I would proudly call this a "great minds think alike" con
 - Doesn't get too creative (unless needed) and responds to the point
   
 
+### Reference:
+Lang-chain's ReACT Style Architecture - https://github.com/langchain-ai/langgraph/blob/main/examples/rewoo/rewoo.ipynb?ref=blog.langchain.dev
 
 ### Citation
 [1] https://arxiv.org/abs/2305.04091?ref=blog.langchain.dev 
